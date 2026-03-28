@@ -152,7 +152,7 @@ narwhals==2.7.0
 nest-asyncio==1.6.0
 networkx==3.6.1
 nltk==3.9.2
-numpy==2.3.5
+numpy>=2.1.0,<2.3.0
 oauthlib==3.3.1
 olefile==0.47
 omegaconf==2.3.0
