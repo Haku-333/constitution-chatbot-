@@ -8,7 +8,7 @@ Endpoints:
   POST /chat      → accepts { "message": "..." }, returns { "answer": "..." }
 
 Run with:
-  uvicorn main:app --reload --port 8000
+  uvicorn main:app --reload --port 8001
 """
 
 from fastapi import FastAPI, HTTPException
