@@ -18,8 +18,9 @@ from pathlib import Path
 import threading
 from dotenv import load_dotenv
 
-# Load GOOGLE_API_KEY from .env file
-load_dotenv()
+# Load GOOGLE_API_KEY from .env file explicitly
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
