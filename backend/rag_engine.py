@@ -25,7 +25,7 @@ load_dotenv(dotenv_path=env_path)
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever          # from main langchain package
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -78,19 +78,20 @@ def _build_rag_chain():
     )
 
     # Check if the vector store already exists on disk
-    if os.path.exists(DB_PATH) and os.listdir(DB_PATH):
-        print("🔄 Loading existing Chroma vector store from disk...")
-        vectorstore = Chroma(
-            persist_directory=DB_PATH,
-            embedding_function=embeddings,
+    if os.path.exists(DB_PATH) and os.path.exists(os.path.join(DB_PATH, "index.faiss")):
+        print("🔄 Loading existing FAISS vector store from disk...")
+        vectorstore = FAISS.load_local(
+            folder_path=DB_PATH,
+            embeddings=embeddings,
+            allow_dangerous_deserialization=True
         )
     else:
-        print("🔄 Building Chroma vector store (first run may take a minute)...")
-        vectorstore = Chroma.from_documents(
+        print("🔄 Building FAISS vector store (first run may take a minute)...")
+        vectorstore = FAISS.from_documents(
             documents=chunks,
             embedding=embeddings,
-            persist_directory=DB_PATH,
         )
+        vectorstore.save_local(DB_PATH)
     
     vector_retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
